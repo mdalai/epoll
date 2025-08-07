@@ -1,0 +1,144 @@
+<mat-toolbar color="primary">
+  <span>Admin Dashboard</span>
+</mat-toolbar>
+
+<div class="admin-container">
+
+
+  <mat-card class="poll-card">
+    <mat-card-header>
+      <mat-card-title>Existing Polls</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="polls()">
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let poll"> {{poll.title}} </td>
+        </ng-container>
+
+        <!-- Options Column -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef> Options </th>
+          <td mat-cell *matCellDef="let poll">
+            <mat-chip-set>
+              @for (option of poll.options; track option) {
+                <mat-chip>{{ option }}</mat-chip>
+              }
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Settings Column -->
+        <ng-container matColumnDef="settings">
+          <th mat-header-cell *matHeaderCellDef> Settings </th>
+          <td mat-cell *matCellDef="let poll">
+            @if (poll.settings.allowMultipleVotes) {
+              <p>Allows multiple votes</p>
+            }
+            @if (poll.settings.allowVoteChange) {
+              <p>Allows vote changes</p>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let poll"> {{poll.status}} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let poll">
+            <button mat-icon-button (click)="copyLink(poll.id)">
+              <mat-icon>link</mat-icon>
+            </button>
+            <button mat-icon-button (click)="editPoll(poll)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if (poll.status === 'active') {
+              <button mat-icon-button (click)="updatePollStatus(poll, 'paused')">
+                <mat-icon>pause</mat-icon>
+              </button>
+            } @else {
+              <button mat-icon-button (click)="updatePollStatus(poll, 'active')">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            }
+            <button mat-icon-button (click)="deletePoll(poll.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['title', 'options', 'settings', 'status', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['title', 'options', 'settings', 'status', 'actions'];"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="fab-container">
+    <button mat-fab color="primary" (click)="showCreateNewPollForm.set(true)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  @if (showCreateNewPollForm()) {
+    <mat-card class="poll-form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editingPoll() ? 'Edit Poll' : 'Create New Poll' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-stepper [linear]="true" #stepper [formGroup]="form">
+          <mat-step [stepControl]="form.controls.title">
+            <ng-template matStepLabel>Poll Details</ng-template>
+            <mat-form-field appearance="fill">
+              <mat-label>Poll Title</mat-label>
+              <input matInput formControlName="title" required>
+            </mat-form-field>
+            <div class="stepper-actions">
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </mat-step>
+
+          <mat-step [stepControl]="options">
+            <ng-template matStepLabel>Options</ng-template>
+            <div formArrayName="options">
+              @for (option of options.controls; track $index) {
+                <div class="option-row">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Option {{ $index + 1 }}</mat-label>
+                    <input matInput [formControlName]="$index" required>
+                  </mat-form-field>
+                  <button mat-icon-button type="button" (click)="removeOption($index)" [disabled]="options.length < 2">
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+            <button mat-stroked-button type="button" (click)="addOption()">Add Option</button>
+            <div class="stepper-actions">
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </mat-step>
+
+          <mat-step>
+            <ng-template matStepLabel>Settings</ng-template>
+            <div formGroupName="settings" class="settings-group">
+              <mat-checkbox formControlName="allowMultipleVotes">Allow multiple votes</mat-checkbox>
+              <mat-checkbox formControlName="allowVoteChange">Allow vote change</mat-checkbox>
+            </div>
+            <div class="stepper-actions">
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-raised-button color="primary" (click)="savePoll()">{{ editingPoll() ? 'Save Changes' : 'Create Poll' }}</button>
+              <button mat-button (click)="cancelEdit()">Cancel</button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

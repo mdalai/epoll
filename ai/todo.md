@@ -4,10 +4,11 @@
 
 ### Phase 1: Project Setup & Firebase Integration
 
-- [ ] Setup Angular project.
-- [ ] Install Angular Material.
-- [ ] Setup Firebase project (Firestore, Authentication, Hosting).
-- [ ] Integrate Firebase with the Angular application.
+- [x] Setup Angular project.
+- [x] Install Angular Material.
+- [x] Configure zoneless change detection.
+- [x] Setup Firebase project (Firestore, Authentication, Hosting).
+- [x] Integrate Firebase with the Angular application.
 
 ### Phase 2: Authentication
 
@@ -18,21 +19,21 @@
 
 ### Phase 3: Poll Management (Admin)
 
-- [ ] Create an admin dashboard to view all polls.
-- [ ] Implement functionality to create new polls (title, options, settings).
-- [ ] Implement functionality to edit existing polls.
-- [ ] Implement functionality to pause/resume polls.
-- [ ] Implement functionality to delete polls.
-- [ ] Implement a data model for polls in Firestore.
+- [x] Create an admin dashboard to view all polls.
+- [x] Implement functionality to create new polls (title, options, settings).
+- [x] Implement functionality to edit existing polls.
+- [x] Implement functionality to pause/resume polls.
+- [x] Implement functionality to delete polls.
+- [x] Implement a data model for polls in Firestore.
 
 ### Phase 4: Voting System (User)
 
-- [ ] Create a view for users to see and vote on a poll.
-- [ ] Implement the voting logic, storing votes in Firestore.
-- [ ] Require users to enter their name before voting.
-- [ ] Implement logic to prevent multiple votes from the same user (if required).
-- [ ] Allow users to change their vote (if enabled).
-- [ ] Show a confirmation message after a vote is cast.
+- [x] Create a view for users to see and vote on a poll.
+- [x] Implement the voting logic, storing votes in Firestore.
+- [x] Require users to enter their name before voting.
+- [x] Implement logic to prevent multiple votes from the same user (if required).
+- [x] Allow users to change their vote (if enabled).
+- [x] Show a confirmation message after a vote is cast.
 
 ### Phase 5: Real-Time Results
 
@@ -42,7 +43,7 @@
 
 ### Phase 6: Poll Sharing & Access
 
-- [ ] Generate unique links for each poll.
+- [x] Generate unique links for each poll.
 - [ ] (Optional) Implement QR code generation for poll links.
 - [ ] (Optional) Implement email invitations for polls.
 
