@@ -158,11 +158,11 @@
         <mat-card-content>
           <mat-list>
             @for (option of poll.options; track option) {
-              <mat-list-item>
+              <mat-list-item [matTooltip]="option.voters?.join(', ')">
                 <div class="option-container">
                   <div class="option-info">
                     <span class="option-name">{{ option.name }}</span>
-                    <span class="vote-count">{{ option.votes }}</span>
+                    <span class="vote-count">{{ option.votes }} votes</span>
                   </div>
                   <mat-progress-bar mode="determinate" [value]="getVotePercentage(option.votes)"></mat-progress-bar>
                 </div>

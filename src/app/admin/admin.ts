@@ -16,6 +16,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-admin',
@@ -36,6 +37,7 @@ import { MatListModule } from '@angular/material/list';
     MatChipsModule,
     MatProgressBarModule,
     MatListModule,
+    MatTooltipModule,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -158,7 +160,8 @@ export class AdminComponent implements OnInit {
           const existingOption = editingPoll.options[index];
           return {
             name: optionName as string,
-            votes: existingOption ? existingOption.votes : 0
+            votes: existingOption ? existingOption.votes : 0,
+            voters: existingOption ? existingOption.voters : []
           };
         }) ?? [],
         status: editingPoll.status,
@@ -179,7 +182,8 @@ export class AdminComponent implements OnInit {
         title: formValue.title ?? '',
         options: formValue.options?.map(optionName => ({
           name: optionName as string,
-          votes: 0
+          votes: 0,
+          voters: []
         })) ?? [],
         status: 'active',
         settings: {

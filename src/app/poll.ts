@@ -62,6 +62,10 @@ export class PollService {
           const optionIndex = poll.options.findIndex(o => o.name === optionName);
           if (optionIndex !== -1) {
             poll.options[optionIndex].votes++;
+            if (!poll.options[optionIndex].voters) {
+              poll.options[optionIndex].voters = [];
+            }
+            poll.options[optionIndex].voters?.push(userId);
           }
         }
         transaction.update(pollDocRef, { options: poll.options });
@@ -76,6 +80,7 @@ export class PollService {
             const previousOptionIndex = poll.options.findIndex(o => o.name === optionName);
             if (previousOptionIndex !== -1) {
                 poll.options[previousOptionIndex].votes--
+                poll.options[previousOptionIndex].voters = poll.options[previousOptionIndex].voters?.filter(voter => voter !== userId);
             }
         }
 
@@ -83,6 +88,10 @@ export class PollService {
             const optionIndex = poll.options.findIndex(o => o.name === optionName);
             if (optionIndex !== -1) {
                 poll.options[optionIndex].votes++;
+                if (!poll.options[optionIndex].voters) {
+                  poll.options[optionIndex].voters = [];
+                }
+                poll.options[optionIndex].voters?.push(userId);
             }
         }
 

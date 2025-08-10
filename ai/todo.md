@@ -40,6 +40,7 @@
 - [x] Create a component to display poll results in real-time.
 - [x] Use charts (bar or pie) to visualize results.
 - [x] Display total vote counts.
+- [x] Display voter names in the admin component's poll results view.
 
 ### Phase 6: Poll Sharing & Access
 
@@ -62,6 +63,7 @@
 - Implemented the voting system, allowing users to vote on polls.
 - Implemented a real-time results view in the admin dashboard with a sleek and modern design.
 - Fixed a bug where the "allow multiple votes" option was not working correctly.
+- Implemented display of voter names in the admin component's poll results view.
 
 ## 4. Documentation & Review
 
