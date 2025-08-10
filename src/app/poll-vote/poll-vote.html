@@ -14,7 +14,7 @@
           <mat-label class="options-label">Choose an option:</mat-label>
           <mat-radio-group formControlName="option" class="options-radio-group">
             @for (option of poll()?.options; track option) {
-              <mat-radio-button [value]="option">{{ option }}</mat-radio-button>
+              <mat-radio-button [value]="option.name">{{ option.name }}</mat-radio-button>
             }
           </mat-radio-group>
         </div>

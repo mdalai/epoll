@@ -1,7 +1,10 @@
 export interface Poll {
   id: string;
   title: string;
-  options: string[];
+  options: {
+    name: string;
+    votes: number;
+  }[];
   status: 'active' | 'paused';
   settings: {
     allowMultipleVotes: boolean;

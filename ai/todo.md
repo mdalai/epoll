@@ -37,9 +37,9 @@
 
 ### Phase 5: Real-Time Results
 
-- [ ] Create a component to display poll results in real-time.
-- [ ] Use charts (bar or pie) to visualize results.
-- [ ] Display total vote counts.
+- [x] Create a component to display poll results in real-time.
+- [x] Use charts (bar or pie) to visualize results.
+- [x] Display total vote counts.
 
 ### Phase 6: Poll Sharing & Access
 
@@ -58,7 +58,9 @@
 
 ## 3. Execution
 
-*(To be filled out as tasks are completed)*
+- Implemented the admin dashboard with functionality to create, edit, and view polls.
+- Implemented the voting system, allowing users to vote on polls.
+- Implemented a real-time results view in the admin dashboard with a sleek and modern design.
 
 ## 4. Documentation & Review
 

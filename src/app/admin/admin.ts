@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,6 +14,8 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-admin',
@@ -32,6 +34,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatSnackBarModule,
     MatStepperModule,
     MatChipsModule,
+    MatProgressBarModule,
+    MatListModule,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -41,6 +45,8 @@ export class AdminComponent implements OnInit {
   polls = signal<Poll[]>([]);
   editingPoll = signal<Poll | null>(null);
   showCreateNewPollForm = signal(false);
+  selectedPoll = signal<Poll | null>(null);
+
   private readonly formBuilder = inject(FormBuilder);
   private readonly pollService = inject(PollService);
   private readonly clipboard = inject(Clipboard);
@@ -56,6 +62,13 @@ export class AdminComponent implements OnInit {
       allowMultipleVotes: [false],
       allowVoteChange: [false]
     })
+  });
+
+  totalVotes = computed(() => {
+    if (!this.selectedPoll() || !this.selectedPoll()!.options) {
+      return 0;
+    }
+    return this.selectedPoll()!.options.reduce((total, option) => total + option.votes, 0);
   });
 
   get options(): FormArray {
@@ -87,6 +100,7 @@ export class AdminComponent implements OnInit {
   editPoll(poll: Poll): void {
     this.editingPoll.set(poll);
     this.showCreateNewPollForm.set(true);
+    this.selectedPoll.set(null);
 
     this.form.patchValue({
       title: poll.title,
@@ -94,7 +108,7 @@ export class AdminComponent implements OnInit {
     });
 
     const optionsFormArray = this.formBuilder.array(
-      poll.options.map(option => this.formBuilder.control(option, Validators.required))
+      poll.options.map(option => this.formBuilder.control(option.name, Validators.required))
     );
     this.form.setControl('options', optionsFormArray);
   }
@@ -140,7 +154,13 @@ export class AdminComponent implements OnInit {
       const updatedPoll: Poll = {
         id: editingPoll.id,
         title: formValue.title ?? '',
-        options: formValue.options?.filter((option): option is string => !!option) ?? [],
+        options: formValue.options?.map((optionName, index) => {
+          const existingOption = editingPoll.options[index];
+          return {
+            name: optionName as string,
+            votes: existingOption ? existingOption.votes : 0
+          };
+        }) ?? [],
         status: editingPoll.status,
         settings: {
           allowMultipleVotes: formValue.settings?.allowMultipleVotes ?? false,
@@ -157,7 +177,10 @@ export class AdminComponent implements OnInit {
     } else {
       const newPollData: Omit<Poll, 'id'> = {
         title: formValue.title ?? '',
-        options: formValue.options?.filter((option): option is string => !!option) ?? [],
+        options: formValue.options?.map(optionName => ({
+          name: optionName as string,
+          votes: 0
+        })) ?? [],
         status: 'active',
         settings: {
           allowMultipleVotes: formValue.settings?.allowMultipleVotes ?? false,
@@ -173,5 +196,16 @@ export class AdminComponent implements OnInit {
         this.cancelEdit();
       });
     }
+  }
+
+  selectPoll(poll: Poll): void {
+    this.selectedPoll.set(poll);
+    this.showCreateNewPollForm.set(false);
+    this.editingPoll.set(null);
+  }
+
+  getVotePercentage(votes: number): number {
+    const total = this.totalVotes();
+    return total > 0 ? (votes / total) * 100 : 0;
   }
 }

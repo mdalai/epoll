@@ -51,3 +51,59 @@ mat-form-field {
   gap: 10px;
   margin-top: 20px;
 }
+
+.poll-results-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.poll-results-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+}
+
+.mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.option-container {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.option-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.option-name {
+  font-size: 16px;
+}
+
+.vote-count {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.total-votes {
+  margin-top: 24px;
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+}
