@@ -1,28 +1,43 @@
-<div class="poll-vote-container">
-  <mat-card class="poll-card">
-    <mat-card-header>
-      <mat-card-title>{{ poll()?.title }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="vote()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Your Name</mat-label>
-          <input matInput formControlName="name">
-        </mat-form-field>
+@if (!voted()) {
+  <div class="poll-vote-container">
+    <mat-card class="poll-card">
+      <mat-card-header>
+        <mat-card-title>{{ poll()?.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="vote()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Your Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
 
-        <div class="options-group">
-          <mat-label class="options-label">Choose an option:</mat-label>
-          <mat-radio-group formControlName="option" class="options-radio-group">
-            @for (option of poll()?.options; track option) {
-              <mat-radio-button [value]="option.name">{{ option.name }}</mat-radio-button>
+          <div class="options-group">
+            <mat-label class="options-label">Choose an option:</mat-label>
+            @if (poll()?.settings?.allowMultipleVotes) {
+              <div formArrayName="selectedOptions" class="options-checkbox-group">
+                @for (option of poll()?.options; track option) {
+                  <mat-checkbox [value]="option.name" (change)="onCheckboxChange($event)">{{ option.name }}</mat-checkbox>
+                }
+              </div>
+            } @else {
+              <mat-radio-group formControlName="selectedOptions" class="options-radio-group">
+                @for (option of poll()?.options; track option) {
+                  <mat-radio-button [value]="option.name">{{ option.name }}</mat-radio-button>
+                }
+              </mat-radio-group>
             }
-          </mat-radio-group>
-        </div>
+          </div>
 
-        <mat-card-actions align="end">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Vote</button>
-        </mat-card-actions>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
+          <mat-card-actions align="end">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Vote</button>
+          </mat-card-actions>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+} @else {
+  <div class="vote-success">
+    <h1>Thanks for voting!</h1>
+  </div>
+}
+

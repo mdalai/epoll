@@ -61,6 +61,7 @@
 - Implemented the admin dashboard with functionality to create, edit, and view polls.
 - Implemented the voting system, allowing users to vote on polls.
 - Implemented a real-time results view in the admin dashboard with a sleek and modern design.
+- Fixed a bug where the "allow multiple votes" option was not working correctly.
 
 ## 4. Documentation & Review
 

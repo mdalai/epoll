@@ -40,7 +40,7 @@ export class PollService {
     return from(getDocs(q).then(snapshot => !snapshot.empty));
   }
 
-  vote(pollId: string, userId: string, optionName: string): Observable<void> {
+  vote(pollId: string, userId: string, optionNames: string[]): Observable<void> {
     const pollDocRef = doc(this.firestore, `polls/${pollId}`);
 
     return from(runTransaction(this.firestore, async (transaction) => {
@@ -50,10 +50,6 @@ export class PollService {
       }
 
       const poll = pollDoc.data() as Poll;
-      const optionIndex = poll.options.findIndex(o => o.name === optionName);
-      if (optionIndex === -1) {
-        throw new Error('Option does not exist!');
-      }
 
       // Check if user has already voted
       const voteCollection = collection(this.firestore, 'votes');
@@ -62,23 +58,36 @@ export class PollService {
 
       if (snapshot.empty) {
         // New vote
-        poll.options[optionIndex].votes++;
+        for (const optionName of optionNames) {
+          const optionIndex = poll.options.findIndex(o => o.name === optionName);
+          if (optionIndex !== -1) {
+            poll.options[optionIndex].votes++;
+          }
+        }
         transaction.update(pollDocRef, { options: poll.options });
         const voteDoc = doc(collection(this.firestore, 'votes'));
-        transaction.set(voteDoc, { pollId, userId, option: optionName });
+        transaction.set(voteDoc, { pollId, userId, options: optionNames });
       } else if (poll.settings.allowVoteChange) {
         // Change existing vote
         const previousVoteDoc = snapshot.docs[0];
-        const previousOptionName = previousVoteDoc.data()['option'];
-        const previousOptionIndex = poll.options.findIndex(o => o.name === previousOptionName);
+        const previousOptionNames = previousVoteDoc.data()['options'] as string[];
 
-        if (previousOptionIndex !== -1) {
-          poll.options[previousOptionIndex].votes--
+        for (const optionName of previousOptionNames) {
+            const previousOptionIndex = poll.options.findIndex(o => o.name === optionName);
+            if (previousOptionIndex !== -1) {
+                poll.options[previousOptionIndex].votes--
+            }
         }
 
-        poll.options[optionIndex].votes++;
+        for (const optionName of optionNames) {
+            const optionIndex = poll.options.findIndex(o => o.name === optionName);
+            if (optionIndex !== -1) {
+                poll.options[optionIndex].votes++;
+            }
+        }
+
         transaction.update(pollDocRef, { options: poll.options });
-        transaction.update(previousVoteDoc.ref, { option: optionName });
+        transaction.update(previousVoteDoc.ref, { options: optionNames });
       } else {
         throw new Error('You have already voted on this poll.');
       }
