@@ -17,6 +17,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { QRCodeComponent } from 'angularx-qrcode';
 
 @Component({
   selector: 'app-admin',
@@ -38,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressBarModule,
     MatListModule,
     MatTooltipModule,
+    QRCodeComponent,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -48,6 +50,7 @@ export class AdminComponent implements OnInit {
   editingPoll = signal<Poll | null>(null);
   showCreateNewPollForm = signal(false);
   selectedPoll = signal<Poll | null>(null);
+  showQRCode = signal<string | null>(null);
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly pollService = inject(PollService);
@@ -211,5 +214,9 @@ export class AdminComponent implements OnInit {
   getVotePercentage(votes: number): number {
     const total = this.totalVotes();
     return total > 0 ? (votes / total) * 100 : 0;
+  }
+
+  getPollUrl(pollId: string): string {
+    return `${window.location.origin}/poll/${pollId}`;
   }
 }

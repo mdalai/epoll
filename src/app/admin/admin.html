@@ -58,6 +58,9 @@
             <button mat-icon-button (click)="copyLink(poll.id)">
               <mat-icon>link</mat-icon>
             </button>
+            <button mat-icon-button (click)="showQRCode.set(poll.id)">
+              <mat-icon>qr_code</mat-icon>
+            </button>
             <button mat-icon-button (click)="editPoll(poll)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -79,6 +82,15 @@
         <tr mat-header-row *matHeaderRowDef="['title', 'options', 'settings', 'status', 'actions']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['title', 'options', 'settings', 'status', 'actions'];"></tr>
       </table>
+
+      @if (showQRCode(); as pollId) {
+        <div class="qr-code-container">
+          <qrcode [qrdata]="getPollUrl(pollId)"></qrcode>
+          <button mat-icon-button (click)="showQRCode.set(null)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
     </mat-card-content>
   </mat-card>
 

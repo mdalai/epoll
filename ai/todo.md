@@ -45,7 +45,7 @@
 ### Phase 6: Poll Sharing & Access
 
 - [x] Generate unique links for each poll.
-- [ ] (Optional) Implement QR code generation for poll links.
+- [x] (Optional) Implement QR code generation for poll links.
 - [ ] (Optional) Implement email invitations for polls.
 
 ### Phase 7: Deployment
